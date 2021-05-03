@@ -1,6 +1,6 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/macos,windows,linux,pycharm+all,python,vim
-# Edit at https://www.toptal.com/developers/gitignore?templates=macos,windows,linux,pycharm+all,python,vim
+# Created by https://www.toptal.com/developers/gitignore/api/vim,macos,linux,windows,pycharm+all,python,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=vim,macos,linux,windows,pycharm+all,python,visualstudiocode
 
 ### Linux ###
 *~
@@ -304,6 +304,17 @@ tags
 # Persistent undo
 [._]*.un~
 
+### VisualStudioCode ###
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+*.code-workspace
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db:encryptable
@@ -329,4 +340,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/macos,windows,linux,pycharm+all,python,vim
+# End of https://www.toptal.com/developers/gitignore/api/vim,macos,linux,windows,pycharm+all,python,visualstudiocode
