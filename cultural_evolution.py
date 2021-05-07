@@ -201,6 +201,7 @@ def simulation(env, p_o, c, n, learning_flag, fitness):
         iterations += 1
 
         x_1 = get_rand_rate_innovation()
+        x_1 = max(x_1, 1-x_1)
         x_3 = 1 - x_1
 
         x = np.array([x_1, 0, x_3, 0])
@@ -236,8 +237,8 @@ def simulation(env, p_o, c, n, learning_flag, fitness):
             current_rate_tenure = 0
 
         mu_m = mu_M * np.random.exponential(1.)
-        if current_rate_tenure > 200:
-            print(f"current_rate_tenure {current_rate_tenure}")
+        # if current_rate_tenure > 200:
+        print(f"current_rate_tenure {current_rate_tenure}")
         if iterations > 3000:
             print("BREAKING")
             break
@@ -278,6 +279,9 @@ def run_simulation(line: str) -> np.array:
     environment = Env(random.choice([0, 1]))
     num_simulations = 2
     results: List[str] = [simulation(environment, p_o, c, n, learning_flag, fitness) for _ in range(num_simulations)]
+    id = random.randrange(10000)
+    with open(f"results_{id}.out", "w") as out:
+        out.writelines([line, "\n", "\n".join(results), "\n"])
     return line, results
 
 
@@ -285,57 +289,13 @@ def run_simulation(line: str) -> np.array:
 
 if __name__ == '__main__':
     assert len(argv) == 2, "need config file name"
+
     with open(argv[1]) as config_file:
         configs = [l.strip() for l in config_file.readlines()]
 
     with Pool(cpu_count() - 1) as pool:
-        results = pool.imap(run_simulation, configs, chunksize=4)
+        results = dict(pool.map(run_simulation, configs))
 
     with open("result.out", "a") as out:
-        for line, outputs in results:
+        for line, outputs in results.items():
             out.writelines([line, "\n", "\n".join(outputs), "\n\n"])
-
-# execution
-"""
-> cat config_file1.in
-1 1 0 1e-4 5 5 0.01 random 
-1 1 0 1e-4 10 5 0.01 random 
-1 1 0 1e-4 15 5 0.01 random
-1 1 0 1e-4 20 5 0.01 random 
-1 1 0 1e-4 25 5 0.01 random 
-1 1 0 1e-4 30 5 0.01 random 
-1 1 0 1e-4 35 5 0.01 random 
-1 1 0 1e-4 40 5 0.01 random 
-1 1 0.1 1e-4 5 5 0.01 random 
-1 1 0.1 1e-4 10 5 0.01 random 
-1 1 0.1 1e-4 15 5 0.01 random
-1 1 0.1 1e-4 20 5 0.01 random 
-1 1 0.1 1e-4 25 5 0.01 random 
-1 1 0.1 1e-4 30 5 0.01 random 
-1 1 0.1 1e-4 35 5 0.01 random 
-1 1 0.1 1e-4 40 5 0.01 random 
-1 1 0.1 1e-4 5 5 0.01 biased_R 
-1 1 0.1 1e-4 10 5 0.01 biased_R 
-1 1 0.1 1e-4 15 5 0.01 biased_R 
-1 1 0.1 1e-4 20 5 0.01 biased_R 
-1 1 0.1 1e-4 25 5 0.01 biased_R 
-1 1 0.1 1e-4 30 5 0.01 biased_R 
-1 1 0.1 1e-4 35 5 0.01 biased_R 
-1 1 0.1 1e-4 40 5 0.01 biased_R 
-1 1 0.1 1e-4 5 50 0.01 biased_R 
-1 1 0.1 1e-4 10 50 0.01 biased_R 
-1 1 0.1 1e-4 15 50 0.01 biased_R 
-1 1 0.1 1e-4 20 50 0.01 biased_R 
-1 1 0.1 1e-4 25 50 0.01 biased_R 
-1 1 0.1 1e-4 30 50 0.01 biased_R 
-1 1 0.1 1e-4 35 50 0.01 biased_R 
-1 1 0.1 1e-4 40 50 0.01 biased_R 
-1 1 0.4 1e-4 5 5 0.01 biased_R 
-1 1 0.4 1e-4 10 5 0.01 biased_R 
-1 1 0.4 1e-4 15 5 0.01 biased_R 
-1 1 0.4 1e-4 20 5 0.01 biased_R 
-1 1 0.4 1e-4 25 5 0.01 biased_R 
-1 1 0.4 1e-4 30 5 0.01 biased_R 
-1 1 0.4 1e-4 35 5 0.01 biased_R 
-1 1 0.4 1e-4 40 5 0.01 biased_R 
-"""
